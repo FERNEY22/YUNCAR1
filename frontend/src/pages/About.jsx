@@ -190,6 +190,7 @@ const styles = {
     fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
     fontWeight: 800,
     marginBottom: '1.25rem',
+    color: '#fff',
   },
   tagline: {
     borderLeft: '4px solid var(--color-accent)',

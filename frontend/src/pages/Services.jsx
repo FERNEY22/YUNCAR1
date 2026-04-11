@@ -201,6 +201,7 @@ const styles = {
     fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
     fontWeight: 800,
     marginBottom: '1rem',
+    color: '#fff',
   },
   headerSub: {
     fontSize: '1.0625rem',
