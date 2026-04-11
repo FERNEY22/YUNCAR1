@@ -50,7 +50,7 @@
 
 ---
 
-## 006 | Naming de tokens CSS — `--color-primary` vs `--color-dark`
+## 006 | Naming CSS — `--color-primary` vs `--color-dark`
 - **Fecha**: 11/04/2026
 - **Decisión**: Usar `--color-primary` en lugar de `--color-dark` como se definió en la guía de identidad visual
 - **Razón**: Más semántico para un sistema de diseño — `primary` describe el rol del color, no su apariencia
