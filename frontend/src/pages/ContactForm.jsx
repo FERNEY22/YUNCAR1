@@ -97,11 +97,11 @@ export default function ContactForm() {
               <span style={styles.successIcon}>✅</span>
               <h2 style={styles.successTitle}>¡Solicitud recibida!</h2>
               <p style={styles.successText}>
-                Gracias por contactar a YUNCAR. Un técnico especializado revisará su requerimiento
+                Gracias por contactar con YUNCAR. Un técnico especializado revisará su requerimiento
                 y le responderá en menos de 24 horas hábiles.
               </p>
               <p style={styles.successText}>
-                Para emergencias que no pueden esperar, contáctenos por WhatsApp Business.
+                Para emergencias que no pueden esperar, contáctenos vía WhatsApp Business.
               </p>
               <button
                 onClick={() => setStatus('idle')}

@@ -13,7 +13,7 @@ export default function Portfolio() {
           <h1 style={styles.title}>Casos de trabajo</h1>
           <p style={styles.sub}>
             Documentamos cada intervención con reporte técnico.
-            Los casos de referencia se publicarán aquí en la medida que se ejecuten.
+            Los casos de referencia se publicarán aquí en la medida que se ejecutan.
           </p>
         </div>
       </section>
