@@ -269,7 +269,7 @@ export default function ContactForm() {
                 <span style={styles.contactIcon}>💬</span>
                 <div>
                   <p style={styles.contactLabel}>WhatsApp Business</p>
-                  <p style={styles.contactValue}>+57 [número]</p>
+                  <p style={styles.contactValue}>+57 3154720276</p>
                   <p style={styles.contactNote}>Emergencias eléctricas 24/7</p>
                 </div>
               </div>
