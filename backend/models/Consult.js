@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 
 const consultSchema = new mongoose.Schema(
   {
-    // --- Datos del lead ---
+    // --- Datos lead ---
     nombre: {
       type: String,
       required: [true, 'El nombre es obligatorio'],
@@ -79,7 +79,7 @@ const consultSchema = new mongoose.Schema(
       default: null,
     },
 
-    // --- Notas internas del admin ---
+    // --- Notas internas admin ---
     notas: {
       type: String,
       trim: true,
@@ -88,7 +88,7 @@ const consultSchema = new mongoose.Schema(
     },
   },
   {
-    // Agrega automáticamente createdAt y updatedAt
+    // Agrega auto createdAt y updatedAt
     timestamps: { createdAt: 'creadoEn', updatedAt: 'actualizadoEn' },
   }
 );
