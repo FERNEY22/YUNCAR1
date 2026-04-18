@@ -1,16 +1,17 @@
 # ==========================================
 # YUNCAR - .gitignore
-# Stack: React/Vite + Node/Express + Firebase
+# Stack: React/Vite + Node/Express + MongoDB
 # ==========================================
 
 # Dependencias
 node_modules/
-package-lock.json
 yarn.lock
 
-# Variables de entorno (CRÍTICO)
+# Variables de entorno (CRÍTICO - contienen secretos)
 .env
 .env.local
+.env.development
+.env.production
 !.env.example
 
 # Outputs de build
@@ -29,8 +30,8 @@ npm-debug.log*
 .DS_Store
 Thumbs.db
 
-# Firebase local (si usas emuladores)
-.firebase/
+# Coverage de tests (futuro)
+coverage/
 
 # Temporales
 *.tmp
