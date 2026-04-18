@@ -2,7 +2,7 @@
 // [F-07] feat: formulario de contacto con contenido real Closes #7
 // Sin dependencias externas. Validación nativa. Submit hacia /api/contact.
 
-import { useState } from 'react';
+import { useState, Children, cloneElement } from 'react';
 
 const ZONES = [
   'Puente Aranda',
@@ -319,11 +319,21 @@ export default function ContactForm() {
 
 /* ── Sub-componente Field ──────────────────────────────────────── */
 function Field({ label, error, children }) {
+  const child = Children.only(children);
+  const inputId   = `field-${child.props.name}`;
+  const errorId   = `${inputId}-error`;
+
+  const enhancedChild = cloneElement(child, {
+    id: inputId,
+    'aria-invalid': error ? 'true' : 'false',
+    'aria-describedby': error ? errorId : undefined,
+  });
+
   return (
     <div style={styles.field}>
-      <label style={styles.label}>{label}</label>
-      {children}
-      {error && <span style={styles.errorMsg}>{error}</span>}
+      <label htmlFor={inputId} style={styles.label}>{label}</label>
+      {enhancedChild}
+      {error && <span id={errorId} style={styles.errorMsg}>{error}</span>}
     </div>
   );
 }
