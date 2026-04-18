@@ -19,14 +19,14 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// --- Conexión a MongoDB ---
+// --- Conexión MongoDB ---
 connectDB();
 
 // --- Rutas ---
 app.use('/api/health', require('./routes/healthRoutes'));
 app.use('/api/contact', require('./routes/contactRoutes'));
 
-// --- Ruta raíz de prueba ---
+// --- Ruta raíz prueba ---
 app.get('/', (req, res) => {
   res.json({
     message: 'YUNCAR Backend API',
@@ -35,7 +35,7 @@ app.get('/', (req, res) => {
   });
 });
 
-// --- Arranque del servidor ---
+// --- Arranque servidor ---
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
   console.log(`   Entorno: ${process.env.NODE_ENV}`);
