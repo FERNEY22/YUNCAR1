@@ -1,6 +1,6 @@
 // ==========================================
 // YUNCAR Backend - Conexión a MongoDB Atlas
-// ADR-010: MongoDB + Mongoose
+// MongoDB + Mongoose
 // ==========================================
 
 const mongoose = require('mongoose');
