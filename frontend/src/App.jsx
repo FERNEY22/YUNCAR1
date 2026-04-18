@@ -15,10 +15,12 @@ import About       from './pages/About';
 import ContactForm from './pages/ContactForm';
 import Portfolio   from './pages/Portfolio';
 import NotFound    from './pages/NotFound';
+import ScrollToTop    from './components/ScrollToTop';
 
 export default function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Header />
       <Routes>
         <Route path="/"           element={<Home />} />
