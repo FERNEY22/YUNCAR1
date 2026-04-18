@@ -58,6 +58,8 @@ function NetworkCanvas() {
     let nodes = [];
     let pulses = [];
 
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     function resize() {
       canvas.width  = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
@@ -76,6 +78,33 @@ function NetworkCanvas() {
           ps: 0.007 + Math.random() * 0.012,
         });
       }
+    }
+
+    function drawStatic() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const d  = Math.sqrt(dx * dx + dy * dy);
+          if (d < 140) {
+            ctx.strokeStyle = `rgba(26,58,92,${(1 - d / 140) * 0.1})`;
+            ctx.lineWidth   = 0.7;
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      nodes.forEach((n) => {
+        ctx.fillStyle = 'rgba(26,58,92,0.15)';
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
     }
 
     function frame() {
@@ -135,9 +164,19 @@ function NetworkCanvas() {
 
     resize();
     initNodes();
-    frame();
 
-    window.addEventListener('resize', () => { resize(); initNodes(); });
+    if (reducedMotion) {
+      drawStatic();
+    } else {
+      frame();
+    }
+
+    window.addEventListener('resize', () => {
+      resize();
+      initNodes();
+      if (reducedMotion) drawStatic();
+    });
+
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', resize);
