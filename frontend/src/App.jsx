@@ -14,6 +14,7 @@ import Projects    from './pages/Projects';
 import About       from './pages/About';
 import ContactForm from './pages/ContactForm';
 import Portfolio   from './pages/Portfolio';
+import NotFound    from './pages/NotFound';
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
         <Route path="/nosotros"   element={<About />} />
         <Route path="/contacto"   element={<ContactForm />} />
         <Route path="/portafolio" element={<Portfolio />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
       <FloatingButtons />
