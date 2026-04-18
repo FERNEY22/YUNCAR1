@@ -69,17 +69,24 @@ export default function ContactForm() {
       return;
     }
     setStatus('sending');
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
+        signal: controller.signal,
       });
       if (!res.ok) throw new Error('Server error');
       setStatus('success');
       setForm(INIT);
     } catch {
       setStatus('error');
+    } finally {
+      clearTimeout(timeoutId);
     }
   }
 
