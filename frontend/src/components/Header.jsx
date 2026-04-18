@@ -1,23 +1,49 @@
 // Header.jsx — YUNCAR MVP
 // Ubicación: frontend/src/components/Header.jsx
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
 const NAV_LINKS = [
   { to: '/',          label: 'Inicio' },
   { to: '/servicios', label: 'Servicios' },
   { to: '/proyectos', label: 'Proyectos' },
+  { to: '/portafolio', label: 'Portafolio' },
   { to: '/nosotros',  label: 'Nosotros' },
 ];
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const headerRef = useRef(null);
 
   function closeMenu() { setMenuOpen(false); }
 
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    function handleKey(e) {
+      if (e.key === 'Escape') setMenuOpen(false);
+    }
+
+    function handleOutside(e) {
+      if (headerRef.current && !headerRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    }
+
+    document.addEventListener('keydown', handleKey);
+    document.addEventListener('mousedown', handleOutside);
+    document.addEventListener('touchstart', handleOutside);
+
+    return () => {
+      document.removeEventListener('keydown', handleKey);
+      document.removeEventListener('mousedown', handleOutside);
+      document.removeEventListener('touchstart', handleOutside);
+    };
+  }, [menuOpen]);
+
   return (
-    <header style={s.header}>
+    <header ref={headerRef} style={s.header}>
       <div style={s.inner}>
 
         <Link to="/" style={s.logo} onClick={closeMenu}>
