@@ -1,6 +1,6 @@
 // ==========================================
 // YUNCAR Backend - Contact Routes
-// POST /api/contact
+// validacion POST /api/contact
 // ==========================================
 
 const express = require('express');

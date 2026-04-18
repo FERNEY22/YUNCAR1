@@ -1,12 +1,12 @@
 // ==========================================
 // YUNCAR Backend - Contact Controller
-// POST /api/contact - Recibe lead + notifica por correo
+// POST /api/contact - Recibe lead + notificacion correo
 // ==========================================
 
 const nodemailer = require('nodemailer');
 const Consult = require('../models/Consult');
 
-// --- Transporter SMTP (se crea una sola vez) ---
+// --- Transporter SMTP (se crea una vez) ---
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: parseInt(process.env.SMTP_PORT, 10),
@@ -21,7 +21,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// --- Verificación de conexión SMTP al arrancar ---
+// --- Verificación de conexión SMTP al arranque ---
 transporter.verify((error) => {
   if (error) {
     console.error('❌ Error en configuración SMTP:', error.message);
