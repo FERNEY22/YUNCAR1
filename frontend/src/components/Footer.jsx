@@ -249,7 +249,7 @@ const s = {
     fontSize: '0.7rem',
     textTransform: 'uppercase',
     letterSpacing: '0.07em',
-    color: 'rgba(255,255,255,0.45)',
+    color: 'rgba(255,255,255,0.7)',
     fontWeight: 700,
     marginTop: '0.5rem',
   },
@@ -296,6 +296,6 @@ const s = {
   },
   legalText: {
     fontSize: '0.75rem',
-    color: 'rgba(255,255,255,0.4)',
+    color: 'rgba(255,255,255,0.65)',
   },
 };
