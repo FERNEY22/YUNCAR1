@@ -7,7 +7,7 @@
 
 ### Alcance ejecutado
 
-Auditoría estática de 12 archivos del frontend contra los 4 puntos del criterio de usabilidad (sección 10.1 PROMPT MAESTRO v4):
+Auditoría estática de 12 archivos del frontend contra los 4 puntos del criterio de usabilidad:
 
 1. Responsive mobile 375px
 2. Contraste de colores vs paleta aprobada (sección 3)
@@ -18,13 +18,13 @@ Archivos auditados: App.jsx, main.jsx, index.css, index.html, package.json, vite
 
 ### Nota metodológica
 
-La planeación original del Issue #8 en el PROMPT MAESTRO lo definía como "pruebas de usabilidad" (solo documentación). Durante la ejecución se tomó la decisión de no solo documentar hallazgos sino también corregir los de severidad Alta y Media en commits atómicos separados, todos referenciando `#8`, con un commit final `Closes #8`. Esta desviación se documenta aquí como aprendizaje: las pruebas de usabilidad tienen más valor si incluyen la corrección, siempre que cada corrección tenga trazabilidad individual.
+La planeación original del Issue #8 definía como "pruebas de usabilidad" (solo documentación). Durante la ejecución se tomó la decisión de no solo documentar hallazgos sino también corregir los de severidad Alta y Media en commits atómicos separados, todos referenciando `#8`, con un commit final `Closes #8`. Esta desviación se documenta aquí como aprendizaje: las pruebas de usabilidad tienen más valor si incluyen la corrección, siempre que cada corrección tenga trazabilidad individual.
 
 ### Hallazgos corregidos en esta sesión
 
 | Ref | Archivo | Descripción del fix | Commit |
 |-----|---------|---------------------|--------|
-| G1 | vite.config.js | Proxy backend `:5000` → `:3001` (alinea con PROMPT sección 9) | [F-08] fix proxy backend port 3001 #8 |
+| G1 | vite.config.js | Proxy backend `:5000` → `:3001` | [F-08] fix proxy backend port 3001 #8 |
 | E1 | Footer.jsx | Contraste texto legal/scheduleLabel elevado de 0.4/0.45 → 0.65/0.7 alpha (WCAG AA) | [F-08] fix contraste texto legal footer #8 |
 | D1 + D2 | pages/ContactForm.jsx | `<label htmlFor>` + `<input id>` + `aria-invalid` + `aria-describedby` vía `cloneElement` en sub-componente Field | [F-08] fix a11y labels y aria en formulario #8 |
 | A1 | App.jsx + pages/NotFound.jsx | Ruta catch-all `*` → componente NotFound con CTAs a `/` y `/contacto` | [F-08] add ruta catch-all NotFound #8 |
