@@ -160,9 +160,45 @@ UptimeRobot detectó un primer 502 Bad Gateway durante el cold start del primer 
 1. Limpiar entrada IP local `186.102.31.114/32` de Atlas Network Access cuando ya no se necesite acceso desde la máquina de desarrollo.
 2. Hacer privada o eliminar la status page pública de UptimeRobot (`stats.uptimerobot.com/r4O9B2TNXw`) — quedó pública por configuración por defecto del wizard.
 
+---
+
+## Issue #12 — Pruebas funcionales y depuración
+
+**Período:** 18/05 – 25/05/2026 (planeado) · 25/04/2026 (ejecutado)
+**Sesión de ejecución:** 7 (25/04/2026)
+**Autor:** Arnold Ferney Torres Ome
+**Commit de cierre:** [F-12] frontend conectado a Render produccion via VITE_API_URL Closes #12
+
+### Alcance ejecutado
+
+Validación end-to-end del flujo formulario → backend → MongoDB Atlas → Gmail con el backend ya en producción. Conexión del frontend Vite al backend de Render mediante variable de entorno `VITE_API_URL`, en sustitución de la ruta relativa `/api/contact` que solo funcionaba con el proxy de Vite en desarrollo local. Configuración de la variable en el dashboard de Netlify para producción al momento de crear el sitio.
+
+Archivos tocados: frontend/src/pages/ContactForm.jsx (1 línea), frontend/.env.example (nuevo), frontend/.env.local (nuevo, ignorado por git).
+
+### Nota metodológica
+
+El cambio en `ContactForm.jsx` fue de una sola línea: el `fetch('/api/contact', ...)` original quedó como `fetch(\`${import.meta.env.VITE_API_URL}/api/contact\`, ...)`. El uso de variable de entorno en lugar de URL hardcoded permite separar limpiamente desarrollo y producción sin tocar código entre entornos.
+
+La validación se ejecutó en dos etapas para minimizar el consumo de minutos de Netlify: primero `localhost:5173` apuntando al backend de Render con la variable cargada desde `.env.local`, validando triple destino (Mongo + Gmail + Render logs); solo cuando la validación local fue exitosa se hizo push al repo.
+
+### Verificaciones — OK
+
+- POST de Postman a `https://yuncar-backend.onrender.com/api/contact` con payload válido → 201 Created en 408 ms
+- POST con body vacío → 400 Bad Request con lista de errores del schema (validaciones del Issue #11 activas en producción)
+- Documentos guardados en colección `yuncar.consults` verificados en Atlas Data Explorer (tests "Test Render Produccion", "Alex Bustamante - Industrias GINKO", "maria down - CORTING")
+- Correos recibidos en `a.ferney.torres@gmail.com` con formato completo, ID del documento incluido, timezone Bogotá
+- Render logs muestran `Lead guardado` + `Correo enviado` para cada POST exitoso
+- Frontend `localhost:5173/contacto` con `.env.local` apuntando a Render: formulario muestra successCard tras envío, doc en Mongo confirma flujo end-to-end
+
+### Pruebas manuales pendientes del usuario
+
+1. Crear sitio Netlify desde el repo `FERNEY22/YUNCAR1` con `VITE_API_URL=https://yuncar-backend.onrender.com` configurada antes del primer Deploy site.
+2. Validar el formulario en el sitio Netlify público una vez completado el primer build.
+3. Revisar el ADR-025 (TLS `rejectUnauthorized: false`) en el entorno de Render. Pendiente para Sesión 8.
+
 ### Siguiente hito
 
-Issue #12 — Pruebas funcionales E2E en producción + conexión frontend al backend de Render. Ejecutado en la misma sesión por continuidad.
+Issue #13 — Adquisición de dominio (`yuncar.com.co` en Namecheap) y configuración DNS. Pendiente para Sesión 8 o posterior.
 
 ---
 
