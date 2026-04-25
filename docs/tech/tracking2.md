@@ -126,6 +126,44 @@ Se creó un Project Atlas dedicado `YUNCAR` en lugar de reusar el Project de FER
 2. Rotar password de `yuncar_app` (quedó expuesto en capturas durante Sesión 6)
 3. Verificar en Atlas Data Explorer que los documentos llegan desde el entorno Render
 
+---
+
+## Issue #14 — Configuración del servidor + despliegue inicial backend
+
+**Período:** 11/05 – 18/05/2026 (planeado) · 25/04/2026 (ejecutado)
+**Sesión de ejecución:** 7 (25/04/2026)
+**Autor:** Arnold Ferney Torres Ome
+**Commit de cierre:** [DOC][F-14] tracking sesion 7 deploy backend Render Closes #14
+
+### Alcance ejecutado
+
+Despliegue del backend en Render free tier en `https://yuncar-backend.onrender.com`. Configuración previa de MongoDB Atlas Network Access (`0.0.0.0/0`) para permitir acceso desde cualquier IP saliente de Render. Rotación de los tres secretos del proyecto (password de `yuncar_app`, App Password de Gmail, y `ADMIN_KEY`) antes de pegarlos en el dashboard de Render. Configuración de UptimeRobot (ADR-018) sobre el endpoint `/api/health` con intervalo de 5 minutos para evitar el cold start de Render free.
+
+Archivos tocados: ninguno del repo. Toda la configuración fue de infraestructura externa (Atlas, Render, UptimeRobot).
+
+### Nota metodológica
+
+Originalmente el plan de Sesión 6 planteaba rotar los secretos antes del deploy. Durante esta sesión se decidió rotarlos dentro de la misma ventana del deploy, como operación atómica: rotación → pegado en Render → validación local → primer build. Esto evita que el `.env` local quede temporalmente desincronizado con Atlas y Gmail durante la migración a producción.
+
+UptimeRobot detectó un primer 502 Bad Gateway durante el cold start del primer arranque del servicio. El monitor responde más rápido que el tiempo de despertar de Render (~22 segundos visualizado en pantalla "Welcome to Render"). El incidente se auto-resolvió en 10 minutos cuando el servicio terminó de subir. Comportamiento esperado, no es fallo del monitor.
+
+### Verificaciones — OK
+
+- Render dashboard: build exitoso al primer intento, las 9 env vars cargadas correctamente
+- Render logs al arranque: `MongoDB conectado: ac-wxl7rhm-shard-...mongodb.net`, `Base de datos: yuncar`, `SMTP listo para enviar correos`
+- Smoke test navegador: `GET https://yuncar-backend.onrender.com/` responde JSON con `status: running`
+- Atlas Network Access: entrada `0.0.0.0/0` Active con comment `Render production access`
+- UptimeRobot monitor `YUNCAR Backend Health` activo con intervalo 5 min sobre `/api/health`
+
+### Pruebas manuales pendientes del usuario
+
+1. Limpiar entrada IP local `186.102.31.114/32` de Atlas Network Access cuando ya no se necesite acceso desde la máquina de desarrollo.
+2. Hacer privada o eliminar la status page pública de UptimeRobot (`stats.uptimerobot.com/r4O9B2TNXw`) — quedó pública por configuración por defecto del wizard.
+
 ### Siguiente hito
 
-Issue #12 — Pruebas funcionales. Validación local completada en Sesión 6. Pasa a In Review en el Kanban hasta cerrar con validación end-to-end en producción en Sesión 7.
+Issue #12 — Pruebas funcionales E2E en producción + conexión frontend al backend de Render. Ejecutado en la misma sesión por continuidad.
+
+---
+
+
