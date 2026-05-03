@@ -19,6 +19,7 @@ const transporter = nodemailer.createTransport({
   tls: {
     rejectUnauthorized: false,
   },
+  family: 4,
 });
 
 // --- Verificación de conexión SMTP al arranque ---
