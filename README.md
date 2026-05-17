@@ -6,7 +6,7 @@
 
 ## Estado del Proyecto
 
-- **Fase Actual**: Backend MVP validado — Deploy en curso
+- **Fase Actual**: MVP en producción bajo dominio propio `yuncar.co`
 - **Inicio**: 23/02/2026
 - **Target MVP**: 15/06/2026
 - **Metodología**: Kanban · GitHub Projects
@@ -29,10 +29,10 @@
 | Backend Node.js + Express | 27/04 | ✅ Completado | Express 4.18.2 con estructura MVC por capas + CORS + middlewares + entry point `server.js` | 18/04/2026 |
 | Integración con servicios | 04/05 | ✅ Completado | Nodemailer 8.0.5 con Gmail SMTP + MongoDB Atlas integrados en endpoint `/api/contact` | 18/04/2026 |
 | Conexión Firebase Firestore | 11/05 | ✅ Completado | **Sustituido por MongoDB Atlas (ADR-010).** Cluster dedicado `yuncar-cluster` M0 + schema `Consult` con 15 validaciones | 18/04/2026 |
-| Pruebas funcionales | 18/05 | 👀 In Review | Validación end-to-end en local con Postman → MongoDB real → Gmail real. Pendiente validación en producción | Parcial: 18/04/2026 |
-| Adquisición dominio + VPS | 25/05 | 📅 This Week | Pendiente: Namecheap `yuncar.com.co` + DNS | — |
-| Deploy MVP en producción | 01/06 | 🔄 En progreso | Render free + UptimeRobot + whitelist MongoDB `0.0.0.0/0` — arranca Sesión 7 | — |
-| Correos corporativos | 08/06 | 📅 This Week | Pendiente: migración Gmail MVP → Zoho Mail Free con `contacto@yuncar.com.co` | — |
+| Pruebas funcionales | 18/05 | ✅ Completado  | Validación end-to-end en local con Postman → MongoDB real → Gmail real. Validación en producción exitosa notificación Gmail ok. | 18/04/2026 |
+| Adquisición dominio | 25/05 | ✅ Completado | Namecheap `yuncar.co`. DNS completo: ALIAS apex → Netlify, CNAME `www`/`api`, MX Zoho, SPF, DKIM, TXT verificación | 16/05/2026 |
+| Deploy MVP en producción | 01/06 | ✅ Completado | Frontend Netlify (`yuncar.co` + `www.yuncar.co`) + Backend Render (`api.yuncar.co`), ambos con SSL Let's Encrypt. MongoDB Atlas whitelist `0.0.0.0/0`. UptimeRobot sobre `api.yuncar.co/api/health` cada 5 min. | 16/05/2026 |
+| Correos corporativos | 08/06 | ✅ Completado | Zoho Mail Free configurado con buzones `contacto@yuncar.co` (Super Admin, display name `YUNCAR`) y `ferney.torres@yuncar.co` (User). Recepción operativa validada. Backend mantiene Gmail SMTP para notificaciones. | 16/05/2026 |
 | Revisión final y entrega | 15/06 | ⏳ Pendiente | — | — |
 
 ---
@@ -53,11 +53,15 @@
 
 ### Base de Datos y Servicios
 - **MongoDB Atlas M0** (reemplaza plan original Firebase Firestore)
+- **Zoho Mail Free** — buzones corporativos `contacto@yuncar.co` y `ferney.torres@yuncar.co` (recepción)
 - Google Maps API
 - Nodemailer   8.0.5  (notificaciones)
 
 ### Infraestructura
-- VPS + Nginx + Let's Encrypt (producción)
+- **Netlify** (frontend, CDN global, SSL Let's Encrypt automático)
+- **Render** Web Service (backend Node.js, SSL Let's Encrypt automático)
+- **Namecheap** (registrar dominio `yuncar.co`, DNS BasicDNS)
+- **UptimeRobot** (monitoreo `/api/health` cada 5 min)
 - GitHub Projects (Kanban)
 
 ---
