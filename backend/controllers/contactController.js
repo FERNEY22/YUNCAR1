@@ -3,33 +3,18 @@
 // POST /api/contact - Recibe lead + notificacion correo
 // ==========================================
 
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 const Consult = require('../models/Consult');
 
-// --- Transporter SMTP (se crea una vez) ---
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT, 10),
-  secure: false,
-  requireTLS: true,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false,
-  },
-  family: 4,
-});
+// --- Cliente Resend (HTTP API) ---
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-// --- Verificación de conexión SMTP al arranque ---
-transporter.verify((error) => {
-  if (error) {
-    console.error('❌ Error en configuración SMTP:', error.message);
-  } else {
-    console.log('✅ SMTP listo para enviar correos');
-  }
-});
+// --- Verificación de configuración al arranque ---
+if (!process.env.RESEND_API_KEY) {
+  console.error('❌ RESEND_API_KEY no configurada');
+} else {
+  console.log('✅ Resend listo para enviar correos');
+}
 
 // --- Función helper: construir el cuerpo del correo ---
 const buildEmailBody = (lead) => `
@@ -69,19 +54,23 @@ const createContact = async (req, res) => {
       id: nuevoLead._id,
     });
 
-    // 3. Enviar correo de notificación en segundo plano
-    transporter.sendMail({
-      from: `"YUNCAR Contacto" <${process.env.SMTP_USER}>`,
+  // 3. Enviar correo de notificación vía Resend HTTP API en segundo plano
+    resend.emails.send({
+      from: 'YUNCAR Contacto <onboarding@resend.dev>',
       to: process.env.MAIL_TO,
       replyTo: nuevoLead.correo,
       subject: `Nuevo lead: ${nuevoLead.nombre} - ${nuevoLead.servicio || 'Sin servicio especificado'}`,
       text: buildEmailBody(nuevoLead),
     })
-      .then((info) => {
-        console.log(`📧 Correo enviado: ${info.messageId}`);
+      .then(({ data, error }) => {
+        if (error) {
+          console.error(`⚠️  Error enviando correo (lead ya guardado): ${error.message}`);
+        } else {
+          console.log(`📧 Correo enviado: ${data.id}`);
+        }
       })
       .catch((mailError) => {
-        console.error(`⚠️  Error enviando correo (lead ya guardado): ${mailError.message}`);
+        console.error(`⚠️  Error de red enviando correo (lead ya guardado): ${mailError.message}`);
       });
 
   } catch (error) {
