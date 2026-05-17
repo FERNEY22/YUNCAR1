@@ -196,9 +196,110 @@ La validación se ejecutó en dos etapas para minimizar el consumo de minutos de
 2. Validar el formulario en el sitio Netlify público una vez completado el primer build.
 3. Revisar el ADR-025 (TLS `rejectUnauthorized: false`) en el entorno de Render. Pendiente para Sesión 8.
 
-### Siguiente hito
+---
 
-Issue #13 — Adquisición de dominio (`yuncar.com.co` en Namecheap) y configuración DNS. Pendiente para Sesión 8 o posterior.
+### Issue #13 — Adquisición de dominio
+Configuración de la infraestructura productiva de YUNCAR bajo dominio propio
+`yuncar.co`. Adquisición del dominio en Namecheap, alta del servicio de correo
+corporativo Zoho Mail Free con dos buzones operativos, y migración del frontend
+(Netlify) y backend (Render) desde URLs por defecto a subdominios bajo el
+dominio propio. La sesión cubrió únicamente infraestructura - no hubo cambios
+en el código fuente del frontend ni del backend.
+
+Al cierre, el MVP es accesible en `https://yuncar.co`, el backend responde en
+`https://api.yuncar.co/api/health`, y el formulario de contacto persiste
+consultas en MongoDB Atlas con flujo end-to-end validado.
+
+## Recursos creados
+
+### Dominio
+- **Nombre:** `yuncar.co`
+- **Registrar:** Namecheap
+- **Costo:** USD 7.98 (primer año, promocional)
+- **Vence:** 16 de mayo de 2027
+- **Auto-Renew:** desactivado (renovación manual obligatoria antes del vencimiento)
+- **Privacy Protection:** activado (gratis con Namecheap)
+
+---
+
+### Issue #15 — Configuración correos corporativos
+
+### Correo corporativo
+- **Proveedor:** Zoho Mail Free Forever Plan
+- **Plan:** 5 usuarios, 5 GB por buzón, sin IMAP/POP/Active Sync
+- **Buzones activos:**
+  - `contacto@yuncar.co` - Super Administrator (display name: YUNCAR)
+  - `ferney.torres@yuncar.co` - User (display name: Ferney Torres)
+
+### Certificados SSL/TLS
+- `yuncar.co` y `www.yuncar.co`: Let's Encrypt vía Netlify (auto-renueva ago 2026)
+- `api.yuncar.co`: Let's Encrypt vía Render (auto-renueva por plataforma)
+
+## Registros DNS configurados (Namecheap)
+
+### Host Records
+| Tipo | Host | Valor | Función |
+|---|---|---|---|
+| TXT | @ | zoho-verification=zb26290262.zmverify.zoho.com | Verificación propiedad Zoho |
+| TXT | @ | v=spf1 include:zohomail.com ~all | SPF anti-spoofing |
+| TXT | zmail._domainkey | v=DKIM1; k=rsa; p=... | DKIM firma de correos |
+| ALIAS | @ | apex-loadbalancer.netlify.com | Apex apuntando a Netlify |
+| CNAME | www | yuncar-frontend.netlify.app | www redirect via Netlify |
+| CNAME | api | yuncar-backend.onrender.com | Subdominio backend |
+
+### Mail Settings
+- Email Forwarding de Namecheap: desactivado, reemplazado por Custom MX
+- 3 registros MX apuntando a `mx.zoho.com` (10), `mx2.zoho.com` (20),
+  `mx3.zoho.com` (50)
+
+## Custom domains agregados en plataformas
+
+### Netlify (proyecto yuncar-frontend)
+- Primary: `yuncar.co`
+- Alias con redirect 301 automático: `www.yuncar.co` → `yuncar.co`
+- Force HTTPS: activo por defecto (Netlify lo aplica automáticamente con SSL emitido)
+- URL de Netlify default (`yuncar-frontend.netlify.app`): conservada como fallback
+
+### Render (servicio yuncar-backend)
+- Custom domain: `api.yuncar.co` (Verified, Certificate Issued)
+- URL de Render default (`yuncar-backend.onrender.com`): conservada como fallback
+
+---
+
+## Variables de entorno actualizadas
+
+### Netlify (frontend)
+- `VITE_API_URL`: `https://yuncar-backend.onrender.com` → `https://api.yuncar.co`
+- Aplicado mediante Trigger deploy manual (Vite inyecta env vars en build time)
+
+### Render (backend)
+- `FRONTEND_URL`: `https://yuncar-frontend.netlify.app` → `https://yuncar.co`
+- Redeploy automático disparado por Render al guardar la variable
+
+---
+
+## Monitoreo
+
+UptimeRobot Free actualizado:
+- Endpoint anterior: `https://yuncar-backend.onrender.com/api/health`
+- Endpoint nuevo: `https://api.yuncar.co/api/health`
+- Intervalo: 5 minutos
+- Notificaciones a `a.ferney.torres@gmail.com`
+
+---
+
+## Validación end-to-end
+
+Prueba ejecutada el 16/05/2026 a las 15:48 PM (Bogotá):
+
+| Componente | Resultado |
+|---|---|
+| Frontend en `https://yuncar.co` carga | OK |
+| Formulario en `/contacto` acepta input | OK |
+| POST a `https://api.yuncar.co/api/contact` | 201 Created |
+| Documento persistido en MongoDB Atlas collection `consults` | OK |
+| Envío de correo SMTP | FALLA (`Connection timeout`) |
+
 
 ---
 
