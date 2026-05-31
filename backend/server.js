@@ -25,6 +25,7 @@ connectDB();
 // --- Rutas ---
 app.use('/api/health', require('./routes/healthRoutes'));
 app.use('/api/contact', require('./routes/contactRoutes'));
+app.use('/api/auth', require('./routes/authRoutes'));
 
 // --- Ruta raíz prueba ---
 app.get('/', (req, res) => {
