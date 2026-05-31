@@ -94,3 +94,20 @@ const createContact = async (req, res) => {
 };
 
 module.exports = { createContact };
+
+// Listar todos los leads - endpoint protegido (solo usuarios autenticados)
+async function getAllContacts(req, res) {
+  try {
+    const consults = await Consult.find().sort({ createdAt: -1 });
+    return res.status(200).json({
+      count: consults.length,
+      consults
+    });
+  } catch (err) {
+    console.error('Error listando consultas:', err);
+    return res.status(500).json({ error: 'Error al obtener las consultas' });
+  }
+}
+
+module.exports = { createContact, getAllContacts };
+
