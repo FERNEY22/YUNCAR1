@@ -1,11 +1,12 @@
 // ==========================================
 // YUNCAR Backend - Contact Routes
-// POST /api/contact  → público (formulario del sitio)
-// GET  /api/contact  → protegido (panel admin)
+// POST  /api/contact      → público (formulario)
+// GET   /api/contact      → protegido (panel admin)
+// PATCH /api/contact/:id  → protegido (actualizar estado/notas)
 // ==========================================
 
 const express = require('express');
-const { createContact, getAllContacts } = require('../controllers/contactController');
+const { createContact, getAllContacts, updateContact } = require('../controllers/contactController');
 const verifyJWT = require('../middleware/verifyJWT');
 
 const router = express.Router();
@@ -13,7 +14,8 @@ const router = express.Router();
 // Ruta pública - cualquier visitante puede enviar el formulario
 router.post('/', createContact);
 
-// Ruta protegida - requiere JWT válido
+// Rutas protegidas - requieren JWT válido
 router.get('/', verifyJWT, getAllContacts);
+router.patch('/:id', verifyJWT, updateContact);
 
 module.exports = router;

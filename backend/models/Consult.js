@@ -86,11 +86,21 @@ const consultSchema = new mongoose.Schema(
       maxlength: [1000, 'Las notas no pueden superar 1000 caracteres'],
       default: '',
     },
+
+    // --- Audit trail ---
+    lastUpdatedBy: {
+      type: String,
+      default: null,
+    },
   },
   {
     // Agrega auto createdAt y updatedAt
     timestamps: { createdAt: 'creadoEn', updatedAt: 'actualizadoEn' },
   }
+
+    
+
+
 );
 
 module.exports = mongoose.model('Consult', consultSchema);

@@ -111,3 +111,48 @@ async function getAllContacts(req, res) {
 
 module.exports = { createContact, getAllContacts };
 
+async function updateContact(req, res) {
+  try {
+    const { id } = req.params;
+    const { estado, notas } = req.body;
+
+    if (estado === undefined && notas === undefined) {
+      return res.status(400).json({
+        error: 'Debe proporcionar al menos estado o notas para actualizar'
+      });
+    }
+
+    const update = {};
+    if (estado !== undefined) update.estado = estado;
+    if (notas !== undefined) update.notas = notas;
+    update.lastUpdatedBy = req.user.username;
+
+    const consult = await Consult.findByIdAndUpdate(
+      id,
+      update,
+      { new: true, runValidators: true }
+    );
+
+    if (!consult) {
+      return res.status(404).json({ error: 'Lead no encontrado' });
+    }
+
+    return res.status(200).json({ consult });
+
+  } catch (err) {
+    if (err.name === 'ValidationError') {
+      return res.status(400).json({
+        error: 'Error de validación',
+        details: Object.values(err.errors).map(e => e.message)
+      });
+    }
+    if (err.name === 'CastError') {
+      return res.status(400).json({ error: 'ID de lead inválido' });
+    }
+    console.error('Error actualizando lead:', err);
+    return res.status(500).json({ error: 'Error al actualizar el lead' });
+  }
+}
+
+module.exports = { createContact, getAllContacts, updateContact };
+
