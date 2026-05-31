@@ -126,7 +126,7 @@ export default function Footer() {
             © {YEAR} YUNCAR — Todos los derechos reservados
           </span>
           <span style={s.legalText}>
-            NIT 1075247921-1 · El Chico, Bogotá D.C., Colombia
+          NIT 1075247921-1 · El Chico, Bogotá D.C., Colombia · <Link to="/login" style={s.internalLink}>Acceso interno</Link>
           </span>
         </div>
       </div>
@@ -137,6 +137,13 @@ export default function Footer() {
 
 /* ── ESTILOS ─────────────────────────────────────────────────── */
 const s = {
+  
+  internalLink: {
+  color: 'rgba(255,255,255,0.5)',
+  textDecoration: 'none',
+  transition: 'color 0.15s ease',
+  },
+
   footer: {
     background: 'var(--color-primary)',
     color: '#fff',
