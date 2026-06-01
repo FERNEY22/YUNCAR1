@@ -3,6 +3,7 @@
 // Sin dependencias externas. Validación nativa. Submit hacia /api/contact.
 
 import { useState, Children, cloneElement } from 'react';
+import CoverageMap from '../components/CoverageMap';
 
 const ZONES = [
   'Puente Aranda',
@@ -320,6 +321,21 @@ export default function ContactForm() {
           </aside>
         </div>
       </section>
+
+      {/* ── ZONAS DE COBERTURA (MAPA) ──────────────────────────── */}
+            <section style={{ padding: '0 0 4rem', background: 'var(--color-bg)' }}>
+              <div style={styles.container}>
+                <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 800, color: 'var(--color-text-primary)', marginBottom: '0.5rem' }}>
+                  Nuestras zonas de cobertura
+                </h2>
+                <p style={{ fontSize: '1rem', color: 'var(--color-text-secondary)', marginBottom: '1.5rem' }}>
+                  Atendemos las principales zonas industriales de Bogotá.
+                </p>
+                <CoverageMap />
+              </div>
+            </section>
+
+
     </main>
   );
 }
