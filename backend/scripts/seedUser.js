@@ -48,7 +48,7 @@ async function seedUser() {
   }
 
  const mongoUri = process.env.MONGO_URI;
-if (!mongoUri) {
+ if (!mongoUri) {
   console.error('Error: MONGO_URI no está definido en .env');
     process.exit(1);
   }
