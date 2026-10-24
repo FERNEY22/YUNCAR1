@@ -98,7 +98,7 @@ module.exports = { createContact };
 // Listar todos los leads - endpoint protegido (solo usuarios autenticados)
 async function getAllContacts(req, res) {
   try {
-    const consults = await Consult.find().sort({ createdAt: -1 });
+    const consults = await Consult.find().sort({ creadoEn: -1 });
     return res.status(200).json({
       count: consults.length,
       consults
@@ -114,22 +114,63 @@ module.exports = { createContact, getAllContacts };
 async function updateContact(req, res) {
   try {
     const { id } = req.params;
-    const { estado, notas } = req.body;
+    const { estado, notas, prioridad, responsable, proximoSeguimiento } = req.body;
 
-    if (estado === undefined && notas === undefined) {
+    if (
+      estado === undefined && notas === undefined && prioridad === undefined &&
+      responsable === undefined && proximoSeguimiento === undefined
+    ) {
       return res.status(400).json({
-        error: 'Debe proporcionar al menos estado o notas para actualizar'
+        error: 'Debe proporcionar al menos estado, notas, prioridad, responsable o proximoSeguimiento para actualizar'
       });
+    }
+
+    const actual = await Consult.findById(id).lean();
+
+    if (!actual) {
+      return res.status(404).json({ error: 'Lead no encontrado' });
     }
 
     const update = {};
     if (estado !== undefined) update.estado = estado;
     if (notas !== undefined) update.notas = notas;
+    if (prioridad !== undefined) update.prioridad = prioridad;
+    if (responsable !== undefined) update.responsable = responsable || null;
+    if (proximoSeguimiento !== undefined) update.proximoSeguimiento = proximoSeguimiento || null;
     update.lastUpdatedBy = req.user.username;
+
+    // Una entrada de historial por cada campo que realmente cambia
+    const historial = [];
+    const fecha = new Date();
+    const normalizar = (campo, valor) => {
+      if (valor === undefined || valor === null || valor === '') return '';
+      if (campo === 'proximoSeguimiento') {
+        const d = new Date(valor);
+        return isNaN(d) ? valor.toString() : d.toISOString().slice(0, 10);
+      }
+      return valor.toString().trim();
+    };
+    for (const campo of ['estado', 'prioridad', 'responsable', 'notas', 'proximoSeguimiento']) {
+      if (update[campo] === undefined) continue;
+      const anterior = normalizar(campo, actual[campo]);
+      const nuevo = normalizar(campo, update[campo]);
+      if (anterior === nuevo) continue;
+      historial.push({
+        tipo: campo,
+        detalle: campo === 'notas' ? 'Notas actualizadas' : `${anterior || '—'} → ${nuevo || '—'}`,
+        autor: req.user.username,
+        fecha,
+      });
+    }
+
+    const operacion = { $set: update };
+    if (historial.length > 0) {
+      operacion.$push = { historial: { $each: historial } };
+    }
 
     const consult = await Consult.findByIdAndUpdate(
       id,
-      update,
+      operacion,
       { new: true, runValidators: true }
     );
 

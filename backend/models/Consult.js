@@ -92,6 +92,29 @@ const consultSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+
+    // --- Seguimiento comercial ---
+    responsable: {
+      type: String,
+      trim: true,
+      default: null,
+    },
+    proximoSeguimiento: {
+      type: Date,
+      default: null,
+    },
+    historial: {
+      type: [
+        {
+          tipo: { type: String, trim: true },
+          detalle: { type: String, trim: true },
+          autor: { type: String, trim: true },
+          fecha: { type: Date, default: Date.now },
+          _id: false,
+        },
+      ],
+      default: [],
+    },
   },
   {
     // Agrega auto createdAt y updatedAt
