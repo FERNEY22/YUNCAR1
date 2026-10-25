@@ -161,7 +161,8 @@
 - **Decisión**: Cuando se adquiera el dominio `yuncar.com.co`, el email corporativo se hospedará en Zoho Mail Free (5 usuarios, 5 GB cada uno, permanente sin costo)
 - **Razón**: Único servicio que ofrece email profesional con dominio propio sin costo perpetuo y sin obligar a contratar hosting Apache/PHP/MySQL incompatible con el stack. Alternativas descartadas: Hostinger, IONOS, GoDaddy
 - **Impacto**: Se activará en Issue #15 del Kanban. Configuración DNS en Namecheap (MX, SPF, DKIM)
-- **Estado**: ⏳ Pendiente
+- **Estado**: 🔁 Reemplazada
+- Superseded by ADR-028
 
 ---
 
@@ -179,7 +180,8 @@
 - **Decisión**: Gmail con App Password sobre cuenta `a.ferney.torres@gmail.com` con 2FA activo, en lugar del plan original con Outlook
 - **Razón**: Microsoft retiró Basic Auth SMTP para cuentas consumer. El servidor devolvió literal `535 5.7.139 Authentication unsuccessful, basic authentication is disabled`. La única alternativa con Outlook sería OAuth2, desproporcionado para un MVP
 - **Impacto**: Configuración SMTP en `.env` usa `smtp.gmail.com:587`. Plan de migración a Zoho con `contacto@yuncar.com.co` cuando se compre el dominio (Issue #15)
-- **Estado**: ✅ Vigente
+- **Estado**: 🔁 Reemplazada
+- Superseded by ADR-028
 
 ---
 
@@ -188,7 +190,8 @@
 - **Decisión**: `yuncar.com.co` se comprará en Namecheap
 - **Razón**: Un solo proveedor para todos los dominios simplifica gestión DNS, renovaciones y facturación
 - **Impacto**: Gestión DNS para MX records de Zoho se hará desde Namecheap
-- **Estado**: ⏳ Pendiente
+- **Estado**: 🔁 Reemplazada
+- Superseded by ADR-028
 
 ---
 
@@ -224,7 +227,8 @@
 - **Decisión**: Actualización del plan original `nodemailer@^6.9.7` a `nodemailer@^8.0.5`
 - **Razón**: Nodemailer 6.10.1 presenta 4 CVEs de severidad Alta. Las ramas 6.x y 7.x quedaron sin backport. La única versión parchada es 8.0.5+
 - **Impacto**: `package.json` actualizado. Breaking changes de 7→8 no afectan el caso de uso SMTP tradicional
-- **Estado**: ✅ Vigente
+- **Estado**: 🔁 Reemplazada
+- Superseded by ADR-028
 
 ---
 
@@ -233,7 +237,8 @@
 - **Decisión**: El transporter de Nodemailer incluye `tls: { rejectUnauthorized: false }` en el entorno de desarrollo local
 - **Razón**: Node.js en la máquina del desarrollador devolvía `self-signed certificate in certificate chain` contra cualquier SMTP. Causa probable: antivirus o proxy inyectando certificado propio. En producción este flag probablemente no sea necesario
 - **Impacto**: Implementado en Sesión 6. Al deploy en Render probar sin el flag y remover si Render valida correctamente
-- **Estado**: 🔄 Revisar en Sesión 7
+- **Estado**: 🔁 Reemplazada
+- Superseded by ADR-028
 
 ---
 
@@ -251,6 +256,16 @@
 - **Decisión**: El archivo `package-lock.json` se versiona en el repo. Se corrigió el `.gitignore` previo que lo excluía
 - **Razón**: El `package.json` declara rangos que permiten versiones distintas entre `npm install` local y en Render. El lockfile pinnea las versiones exactas garantizando paridad entre entornos. Estándar de la industria desde npm 5
 - **Impacto**: Evita el clásico "en mi máquina funciona". Cambio aplicado en `.gitignore` del monorepo
+- **Estado**: ✅ Vigente
+
+---
+
+## 028 | Arquitectura final de correo: Resend HTTP API + dominio yuncar.co verificado + Zoho Mail Free para buzones
+- **Fecha**: 24/10/2026
+- **Contexto**: Se descartó el envío SMTP desde Render (Nodemailer + Gmail, decisión 019). El dominio definitivo es `yuncar.co`, no `yuncar.com.co` (decisiones 017 y 020)
+- **Decisión**: El backend envía correo por la API HTTP de Resend, región `sa-east-1`, con el dominio `yuncar.co` verificado: return-path `send.yuncar.co`, DKIM en `resend._domainkey`, DMARC `p=none` y SPF raíz de Zoho intacto. Variables: `MAIL_FROM=YUNCAR <contacto@yuncar.co>` y `MAIL_TO=ferney.torres@yuncar.co`. Por cada lead se envía el aviso interno y una confirmación automática al cliente con `replyTo` `contacto@yuncar.co`. Los buzones corporativos se mantienen en Zoho Mail Free
+- **Commits**: `7bb805a` (remitente configurable vía `MAIL_FROM`), `f1b27a5` (confirmación automática al cliente), `6440fd4` (dominio `yuncar.co` en el frontend), `817376b` (limpieza de Nodemailer/SMTP y `module.exports`)
+- **Consecuencias**: El plan gratis de Resend permite 100 envíos/día y cada lead consume 2 (aviso interno + confirmación), es decir, hasta 50 leads/día. Los rebotes solo son visibles en el panel de Resend
 - **Estado**: ✅ Vigente
 
 ---
