@@ -25,7 +25,7 @@ Notas:
   - Username y email se normalizan a minúsculas automáticamente.
 
 Ejemplo:
-  node scripts/seedUser.js --username=ferney --email=ferney@yuncar.com.co --role=admin --password=MiP4ssSegura!
+  node scripts/seedUser.js --username=ferney --email=ferney.torres@yuncar.co --role=admin --password=MiP4ssSegura!
   `);
 }
 

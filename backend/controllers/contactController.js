@@ -118,8 +118,6 @@ YUNCAR — Mantenimiento y consultoría garantizada en Bogotá
   }
 };
 
-module.exports = { createContact };
-
 // Listar todos los leads - endpoint protegido (solo usuarios autenticados)
 async function getAllContacts(req, res) {
   try {
@@ -133,8 +131,6 @@ async function getAllContacts(req, res) {
     return res.status(500).json({ error: 'Error al obtener las consultas' });
   }
 }
-
-module.exports = { createContact, getAllContacts };
 
 async function updateContact(req, res) {
   try {

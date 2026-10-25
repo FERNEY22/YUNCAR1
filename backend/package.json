@@ -1,7 +1,7 @@
 {
   "name": "yuncar-backend",
   "version": "1.0.0",
-  "description": "YUNCAR - Backend API REST (MongoDB + Express + Nodemailer)",
+  "description": "YUNCAR - Backend API REST (MongoDB + Express + Resend)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -14,7 +14,6 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.0.3",
-    "nodemailer": "^8.0.5",
     "resend": "^6.12.3"
   },
   "devDependencies": {
