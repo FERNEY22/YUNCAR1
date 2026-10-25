@@ -73,6 +73,31 @@ const createContact = async (req, res) => {
         console.error(`⚠️  Error de red enviando correo (lead ya guardado): ${mailError.message}`);
       });
 
+    // 4. Enviar confirmación al cliente en segundo plano
+    resend.emails.send({
+      from: process.env.MAIL_FROM || 'YUNCAR Contacto <onboarding@resend.dev>',
+      to: nuevoLead.correo,
+      replyTo: 'contacto@yuncar.co',
+      subject: 'Recibimos su solicitud – YUNCAR',
+      text: `Hola ${nuevoLead.nombre},
+Recibimos su solicitud${nuevoLead.servicio ? ` de ${nuevoLead.servicio}${nuevoLead.zona ? ` para la zona ${nuevoLead.zona}` : ''}` : ''}.
+Un técnico especializado la revisará y le responderá en menos de 24 horas hábiles.
+Para emergencias que paran producción: WhatsApp +57 315 472 0276.
+
+YUNCAR — Mantenimiento y consultoría garantizada en Bogotá
+`,
+    })
+      .then(({ data, error }) => {
+        if (error) {
+          console.error(`⚠️  Error enviando confirmación al cliente (lead ya guardado): ${error.message}`);
+        } else {
+          console.log(`📧 Confirmación enviada al cliente: ${data.id}`);
+        }
+      })
+      .catch((mailError) => {
+        console.error(`⚠️  Error de red enviando confirmación al cliente (lead ya guardado): ${mailError.message}`);
+      });
+
   } catch (error) {
     // Errores de validación de Mongoose
     if (error.name === 'ValidationError') {
