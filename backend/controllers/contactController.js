@@ -56,7 +56,7 @@ const createContact = async (req, res) => {
 
   // 3. Enviar correo de notificación vía Resend HTTP API en segundo plano
     resend.emails.send({
-      from: 'YUNCAR Contacto <onboarding@resend.dev>',
+      from: process.env.MAIL_FROM || 'YUNCAR Contacto <onboarding@resend.dev>',
       to: process.env.MAIL_TO,
       replyTo: nuevoLead.correo,
       subject: `Nuevo lead: ${nuevoLead.nombre} - ${nuevoLead.servicio || 'Sin servicio especificado'}`,
