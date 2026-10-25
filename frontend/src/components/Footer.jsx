@@ -52,11 +52,11 @@ export default function Footer() {
                   +57 315 472 0276
                 </a>
                 <a
-                  href="mailto:contacto@yuncar.com.co"
+                  href="mailto:contacto@yuncar.co"
                   style={s.contactLink}
                 >
                   <span style={s.contactIcon}>✉</span>
-                  contacto@yuncar.com.co
+                  contacto@yuncar.co
                 </a>
                 <span style={s.contactText}>
                   <span style={s.contactIcon}>📍</span>

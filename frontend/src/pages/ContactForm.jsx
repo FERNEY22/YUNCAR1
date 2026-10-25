@@ -286,7 +286,7 @@ export default function ContactForm() {
                 <span style={styles.contactIcon}>📧</span>
                 <div>
                   <p style={styles.contactLabel}>Correo corporativo</p>
-                  <p style={styles.contactValue}>contacto@yuncar.com.co</p>
+                  <p style={styles.contactValue}>contacto@yuncar.co</p>
                 </div>
               </div>
 
